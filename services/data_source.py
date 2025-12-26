@@ -1,3 +1,4 @@
+import os
 import requests
 import dlt
 from typing import Iterator
@@ -8,10 +9,14 @@ HUBSPOT_DEALS_URL = "https://api.hubapi.com/crm/v3/objects/deals"
     name="hubspot_deals",
     write_disposition="replace"
 )
-def hubspot_deals_resource(access_token: str) -> Iterator[dict]:
+def hubspot_deals_resource() -> Iterator[dict]:
     """
     Fetch deals from HubSpot and yield them for DLT
     """
+
+    access_token = os.getenv("HUBSPOT_ACCESS_TOKEN")
+    if not access_token:
+        raise ValueError("HUBSPOT_ACCESS_TOKEN is not set")
 
     headers = {
         "Authorization": f"Bearer {access_token}",
